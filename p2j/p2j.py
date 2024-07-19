@@ -135,6 +135,15 @@ def python2jupyter(source_filename: str, target_filename: str, overwrite: bool =
             # (next line is nothing AND next line is part of a function)
             if (is_end_of_code or next_is_nothing) and not (next_is_nothing and next_is_function):
                 arr.append("{}".format(buffer))
+
+                # Append the function call at the end of the each function
+                # This avoids efforts of writing statement of calling the function for every cell
+                fcall = arr[0].strip().lstrip("def ")
+                idx = fcall.find('(')
+                fcall = fcall[:idx]+'()'
+                arr.append("")
+                arr.append(fcall)
+
                 CODE["source"] = arr
                 cells.append(dict(CODE))
                 arr = []
